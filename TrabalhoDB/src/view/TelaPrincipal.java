@@ -5,6 +5,8 @@
  */
 package view;
 
+import java.awt.event.ActionEvent;
+
 /**
  *
  * @author Sammy Guergachi <sguergachi at gmail.com>
@@ -20,6 +22,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnCadastrarPaciente.addActionListener((java.awt.event.ActionEvent evt) -> {
             btnCadastrarPacienteActionPerformed(evt);
         });
+        
+        btnAgendarConsulta.addActionListener((java.awt.event.ActionEvent evt) -> {
+            btnAgendarConsultaActionPerformed(evt);
+        });
+        
+        btnConsultas.addActionListener((java.awt.event.ActionEvent evt) -> {
+            btnConsultasActionPerformed(evt);
+        });
     }
 
     /**
@@ -32,26 +42,39 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         btnCadastrarPaciente = new javax.swing.JButton();
+        btnAgendarConsulta = new javax.swing.JButton();
+        btnConsultas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnCadastrarPaciente.setText("Cadastrar Paciente");
+
+        btnAgendarConsulta.setText("Agendar Consulta");
+
+        btnConsultas.setText("Consultas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(71, 71, 71)
-                .addComponent(btnCadastrarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addGap(77, 77, 77)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAgendarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCadastrarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(93, 93, 93)
+                .addGap(88, 88, 88)
                 .addComponent(btnCadastrarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(281, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addComponent(btnAgendarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         pack();
@@ -93,14 +116,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgendarConsulta;
     private javax.swing.JButton btnCadastrarPaciente;
+    private javax.swing.JButton btnConsultas;
     // End of variables declaration//GEN-END:variables
 
     private void btnCadastrarPacienteActionPerformed(java.awt.event.ActionEvent evt) {
         TelaCadastroPaciente telaCadastroPaciente = new TelaCadastroPaciente();
         telaCadastroPaciente.setVisible(true);
     }
+    
+    private void btnAgendarConsultaActionPerformed(java.awt.event.ActionEvent evt) {
+        TelaAgendamento telaAgendamento = new TelaAgendamento();
+        telaAgendamento.setVisible(true);
+    }
 
+    private void btnConsultasActionPerformed(ActionEvent evt) {
+        TelaListaConsulta telaListaConsulta = new TelaListaConsulta();
+        telaListaConsulta.setVisible(true);
+    }
 }
 
 
