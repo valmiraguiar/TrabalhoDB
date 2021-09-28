@@ -7,6 +7,9 @@ package view;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
+import model.Paciente;
+import model.PacienteDAO;
 
 /**
  *
@@ -74,7 +77,7 @@ public class TelaCadastroPaciente extends javax.swing.JFrame {
 
         lblSexoPaciente.setText("Sexo:");
 
-        cboxSexoPaciente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculino", "Feminino", "Outro" }));
+        cboxSexoPaciente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "F" }));
 
         lblDataNascimentoPaciente.setText("Data de nascimento:");
 
@@ -278,8 +281,20 @@ public class TelaCadastroPaciente extends javax.swing.JFrame {
     public void btnSalvarPacienteActionPerformed (java.awt.event.ActionEvent evt) {
         String texto = txtNomePaciente.getText();
         JOptionPane.showMessageDialog(null, "COE "+texto );
+        
+        Paciente p = new Paciente();
+        p.setNomePaciente(txtNomePaciente.getText());
+        p.setCpf(txtCpfPaciente.getText());
+        p.setTelefone(txtTelefonePaciente.getText());
+        p.setDataNascimento(txtDataNascimentoPaciente.getText());
+        p.setCartaoSus(txtCartaoSus.getText());
+        p.setSexo(cboxSexoPaciente.getSelectedItem().toString());
+        
+        PacienteDAO pDAO = new PacienteDAO();
+        
+        pDAO.insertPaciente(p);        
     }
-
+    
     private void btnVoltarPacienteActionPerformed(ActionEvent evt) {
         dispose();
     }    
