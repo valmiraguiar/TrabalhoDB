@@ -1,21 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
+import model.Agendamento;
+import model.Consulta;
+import model.Medico;
+import modelDAO.AgendamentoDAO;
+import modelDAO.ConsultaDAO;
+import modelDAO.MedicoDAO;
+import modelDAO.PacienteDAO;
 
-/**
- *
- * @author Sammy Guergachi <sguergachi at gmail.com>
- */
 public class TelaAgendamento extends javax.swing.JFrame {
 
     /**
@@ -23,10 +27,16 @@ public class TelaAgendamento extends javax.swing.JFrame {
      */
     public TelaAgendamento() {
         initComponents();
-        formatarCampoData();
         
+        List<Medico> medicos = getMedicos();
+        
+        preencherTabelaMedicos(medicos);
         btnVoltar.addActionListener((java.awt.event.ActionEvent evt) -> {
            btnVoltarActionPerformed(evt);
+        });
+        
+        btnMarcarConsulta.addActionListener((java.awt.event.ActionEvent evt) -> {
+           btnMarcarConsultaActionPerformed(evt, medicos);
         });
     }
 
@@ -44,17 +54,16 @@ public class TelaAgendamento extends javax.swing.JFrame {
         lblCartaoSus = new javax.swing.JLabel();
         txtCartaoSus = new javax.swing.JTextField();
         lblDataConsulta = new javax.swing.JLabel();
-        txtDataConsulta = new javax.swing.JFormattedTextField();
         lblMedico = new javax.swing.JLabel();
         lblConsulta = new javax.swing.JLabel();
-        lblNomeMedico = new javax.swing.JLabel();
-        txtNomeMedico = new javax.swing.JTextField();
-        lblEspecialidade = new javax.swing.JLabel();
-        txtEspecialidade = new javax.swing.JTextField();
         btnMarcarConsulta = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblMedico = new javax.swing.JTable();
+        txtDataConsulta = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         lblAgendamento.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblAgendamento.setText("Agendamento de Consultas");
@@ -66,21 +75,50 @@ public class TelaAgendamento extends javax.swing.JFrame {
 
         lblDataConsulta.setText("Data da consulta:");
 
-        txtDataConsulta.setToolTipText("YYYY-MM-DD");
-
         lblMedico.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblMedico.setText("Médico");
 
         lblConsulta.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblConsulta.setText("Consulta");
 
-        lblNomeMedico.setText("Nome completo do médico:");
-
-        lblEspecialidade.setText("Especialidade:");
-
         btnMarcarConsulta.setText("Marcar consulta");
 
         btnVoltar.setText("Voltar");
+
+        tblMedico.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "ID", "Nome do medico", "Especialidade"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblMedico.setColumnSelectionAllowed(true);
+        tblMedico.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblMedico);
+        tblMedico.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (tblMedico.getColumnModel().getColumnCount() > 0) {
+            tblMedico.getColumnModel().getColumn(0).setResizable(false);
+            tblMedico.getColumnModel().getColumn(0).setPreferredWidth(1);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,31 +128,30 @@ public class TelaAgendamento extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblConsulta)
-                            .addComponent(lblNomeMedico)
-                            .addComponent(lblEspecialidade)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(98, 98, 98)
-                                .addComponent(txtDataConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblConsulta)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDataConsulta)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtEspecialidade, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtNomeMedico, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblAgendamento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblPaciente, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(lblCartaoSus)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtCartaoSus))
-                                .addComponent(lblMedico, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(btnVoltar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(39, Short.MAX_VALUE))))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblAgendamento)
+                                        .addComponent(lblPaciente)
+                                        .addComponent(lblMedico)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblCartaoSus)
+                                            .addComponent(lblDataConsulta)))
+                                    .addGap(151, 151, 151))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtCartaoSus, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                                        .addComponent(txtDataConsulta))
+                                    .addGap(92, 92, 92))))
+                        .addContainerGap(27, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(67, 67, 67)
+                .addGap(138, 138, 138)
                 .addComponent(btnMarcarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -139,17 +176,11 @@ public class TelaAgendamento extends javax.swing.JFrame {
                     .addComponent(txtDataConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
                 .addComponent(lblMedico)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblNomeMedico)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNomeMedico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblEspecialidade)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtEspecialidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
                 .addComponent(btnMarcarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -193,31 +224,114 @@ public class TelaAgendamento extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMarcarConsulta;
     private javax.swing.JButton btnVoltar;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAgendamento;
     private javax.swing.JLabel lblCartaoSus;
     private javax.swing.JLabel lblConsulta;
     private javax.swing.JLabel lblDataConsulta;
-    private javax.swing.JLabel lblEspecialidade;
     private javax.swing.JLabel lblMedico;
-    private javax.swing.JLabel lblNomeMedico;
     private javax.swing.JLabel lblPaciente;
+    private javax.swing.JTable tblMedico;
     private javax.swing.JTextField txtCartaoSus;
-    private javax.swing.JFormattedTextField txtDataConsulta;
-    private javax.swing.JTextField txtEspecialidade;
-    private javax.swing.JTextField txtNomeMedico;
+    private javax.swing.JTextField txtDataConsulta;
     // End of variables declaration//GEN-END:variables
 
-
-    private void formatarCampoData(){
-        try { 
-            MaskFormatter mask = new MaskFormatter("####-##-##");
-            mask.install(txtDataConsulta);
-        } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "Date format error", "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
-    }
     
     private void btnVoltarActionPerformed(ActionEvent evt) {
         dispose();
     }    
+    
+    private List<Medico> getMedicos(){
+        try{
+            MedicoDAO mDAO = new MedicoDAO();
+            List<Medico> medicos = mDAO.listMedicos();
+            return medicos;
+        }catch(Exception e){
+            System.out.println("Error "+e);
+        }
+        return null;
+    }
+    
+    private void preencherTabelaMedicos(List<Medico> medicos){
+        try{
+            
+            DefaultTableModel tbl = (DefaultTableModel) tblMedico.getModel();
+            tbl.setNumRows(0);
+
+            if(medicos.size() > 0){
+                medicos.forEach(m -> {
+                    tbl.addRow(new String[] {
+                        (""+m.getId_medico()),
+                        m.getNome(),
+                        m.getEspecialidade()
+                    });
+                });
+            }else if(medicos == null){
+                JOptionPane.showMessageDialog(null, "Error", "Erro", JOptionPane.ERROR_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "Nenhuma consulta para esse paciente", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch(HeadlessException e){
+            System.out.println("Error "+e);
+        }
+    }
+    
+    private void limparCampos(){
+        txtCartaoSus.setText("");
+        txtDataConsulta.setText("");
+    }
+    
+    private void btnMarcarConsultaActionPerformed(ActionEvent evt, List<Medico> medicos) {
+                
+        try{
+            if(txtCartaoSus.getText().equals("") || txtDataConsulta.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Digite os dados corretamente!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                limparCampos();
+            }else{
+                AgendamentoDAO aDAO = new AgendamentoDAO();            
+                Agendamento a = new Agendamento();
+
+                Date dataAgendamento = new Date(); 
+                SimpleDateFormat formatador = new SimpleDateFormat("dd-MM-yyyy"); 
+                String dataAgendamentoFormatada = formatador.format(dataAgendamento);
+                
+                
+                a.setData_agendamento(dataAgendamentoFormatada);
+
+                int idMedico = tblMedico.getSelectedRow();
+                a.setId_medico(medicos.get(idMedico).getId_medico());
+
+                PacienteDAO pDAO = new PacienteDAO();
+                int id_paciente = pDAO.getIdPaciente(txtCartaoSus.getText());
+                if(id_paciente == -1)
+                    JOptionPane.showMessageDialog(null, "Cartao SUS INVALIDO", "Erro", JOptionPane.ERROR_MESSAGE);
+                else{
+                    a.setId_paciente(id_paciente);
+                    
+                    String txtData = txtDataConsulta.getText();
+                    if(txtData.length() != 10){
+                        JOptionPane.showMessageDialog(null, "Erro na data, digite corretamente!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        limparCampos();
+                    }else{
+                        a.setData_consulta(txtData);
+                    
+                        Consulta c = new Consulta();
+                        c = aDAO.insertAgendamento(a);
+                        
+                        c.setId_medicoespecialista(a.getId_medico());
+                        c.setId_paciente(a.getId_paciente());
+                        
+                        ConsultaDAO cDAO = new ConsultaDAO();
+                        cDAO.insertConsulta(c);
+
+                        limparCampos();
+                        JOptionPane.showMessageDialog(null, "Consulta marcada!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    }                    
+                }                    
+            }    
+        }catch(Exception e){
+            System.out.println("Error "+e);
+        }
+        
+    }
 }

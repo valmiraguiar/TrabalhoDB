@@ -3,6 +3,7 @@
 <Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -33,13 +34,13 @@
                                   <Component id="lblCpfPaciente" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
                                   <Component id="txtCpfPaciente" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
                                   <Component id="lblEnderecoPaciente" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblLogradouroPaciente" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lblCartaoSus" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblLogradouroPaciente" alignment="0" min="-2" pref="91" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="txtDataNascimentoPaciente" min="-2" pref="110" max="-2" attributes="0"/>
-                                  <Component id="lblDataNascimentoPaciente" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <Component id="lblDataNascimentoPaciente" min="-2" pref="142" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
@@ -60,14 +61,14 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="txtBairroPaciente" alignment="0" min="-2" pref="202" max="-2" attributes="0"/>
-                                      <Component id="lblBairroPaciente" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                                      <Component id="lblCepPaciente" alignment="0" min="-2" pref="43" max="-2" attributes="0"/>
                                       <Component id="txtCepPaciente" alignment="0" min="-2" pref="146" max="-2" attributes="0"/>
+                                      <Component id="lblBairroPaciente" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="lblCepPaciente" alignment="0" min="-2" pref="71" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblNumeroPaciente" min="-2" pref="43" max="-2" attributes="0"/>
-                                      <Component id="txtNumeroPaciente" min="-2" pref="77" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="txtNumeroPaciente" pref="77" max="32767" attributes="0"/>
+                                      <Component id="lblNumeroPaciente" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Component id="btnSalvarPaciente" alignment="1" min="-2" pref="130" max="-2" attributes="0"/>
@@ -85,7 +86,7 @@
                       <Component id="jSeparator1" min="-2" pref="383" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="39" max="32767" attributes="0"/>
+              <EmptySpace pref="45" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

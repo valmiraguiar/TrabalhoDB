@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view;
 
 import java.awt.event.ActionEvent;
 
-/**
- *
- * @author Sammy Guergachi <sguergachi at gmail.com>
- */
 public class TelaPrincipal extends javax.swing.JFrame {
 
     /**
@@ -46,6 +38,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnConsultas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         btnCadastrarPaciente.setText("Cadastrar Paciente");
 

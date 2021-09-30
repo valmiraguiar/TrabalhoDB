@@ -1,11 +1,11 @@
 package trabalhodb;
 
-import controller.DBConnection;
+import view.TelaPrincipal;
 
 public class TrabalhoDB {
 
-    public static void main(String[] args) {
-        
-        DBConnection.connection();
+    public static void main(String[] args) {     
+        TelaPrincipal telaPrincipal = new TelaPrincipal();
+        telaPrincipal.setVisible(true);
     }    
 }

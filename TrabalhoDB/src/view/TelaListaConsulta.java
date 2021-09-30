@@ -1,27 +1,35 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Consulta;
+import model.Paciente;
+import modelDAO.AgendamentoDAO;
+import modelDAO.ConsultaDAO;
+import modelDAO.PacienteDAO;
 
-/**
- *
- * @author Sammy Guergachi <sguergachi at gmail.com>
- */
 public class TelaListaConsulta extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TelaListaConsulta
-     */
+    
+    private List<Consulta> consultas;
+    
     public TelaListaConsulta() {
         initComponents();
         
         btnVoltar.addActionListener((java.awt.event.ActionEvent evt) -> {
            btnVoltarActionPerformed(evt);
-       });
+        });
+        
+        btnBuscar.addActionListener((java.awt.event.ActionEvent evt) -> {
+           btnBuscarActionPerformed(evt);
+        });
+        
+        btnExcluir.addActionListener((java.awt.event.ActionEvent evt) -> {
+           btnExcluirActionPerformed(evt);
+        });
     }
 
     /**
@@ -49,10 +57,10 @@ public class TelaListaConsulta extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblConsultas = new javax.swing.JTable();
         btnVoltar = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         lblConsultas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblConsultas.setText("Consultas");
@@ -106,8 +114,6 @@ public class TelaListaConsulta extends javax.swing.JFrame {
 
         btnVoltar.setText("Voltar");
 
-        btnEditar.setText("Editar Consulta");
-
         btnExcluir.setText("Excluir Consulta");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -128,10 +134,7 @@ public class TelaListaConsulta extends javax.swing.JFrame {
                             .addComponent(lblId)
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(29, 29, 29)
-                                    .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(lblNomePaciente)
@@ -185,9 +188,7 @@ public class TelaListaConsulta extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEditar)
-                    .addComponent(btnExcluir))
+                .addComponent(btnExcluir)
                 .addGap(32, 32, 32))
         );
 
@@ -231,7 +232,6 @@ public class TelaListaConsulta extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JScrollPane jScrollPane1;
@@ -252,5 +252,72 @@ public class TelaListaConsulta extends javax.swing.JFrame {
 
     private void btnVoltarActionPerformed(ActionEvent evt) {
         dispose();
+    }
+    
+    private void btnBuscarActionPerformed(ActionEvent evt) {
+        try{
+            preencherTabela(txtCartaoSus.getText());
+        }catch(Exception e){
+            System.out.println("Error "+e);
+        }
+    }
+    
+    private void preencherTabela(String cartao_sus){
+        try{
+            DefaultTableModel tbl = (DefaultTableModel) tblConsultas.getModel();
+            tbl.setNumRows(0);
+            
+            ConsultaDAO cDAO = new ConsultaDAO();
+            consultas = cDAO.listConsultas(cartao_sus);
+            PacienteDAO pDAO = new PacienteDAO();
+            
+            Paciente p = pDAO.getPaciente(cartao_sus);
+            
+            txtDataNascimento.setText(p.getDataNascimento());
+            txtId.setText(""+p.getIdPaciente());
+            txtNomePaciente.setText(p.getNomePaciente());
+            txtSexo.setText(p.getSexo());
+            
+            consultas.get(0).setCartao_sus(cartao_sus);
+            
+            if(consultas.size() > 0){
+                consultas.forEach(c -> {
+                    tbl.addRow(new String[] {
+                        (""+c.getId_consulta()),
+                        c.getDataConsulta(),
+                        c.getNomeMedico(), 
+                        c.getEspecialidadeMedico(),
+                        c.getDataAgendamento()
+                    });
+                });
+            }else if(consultas == null){
+                JOptionPane.showMessageDialog(null, "Error", "Erro", JOptionPane.ERROR_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "Nenhuma consulta para esse paciente", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch(HeadlessException e){
+            System.out.println("Error "+e);
+        }        
+    }
+    
+    private void btnExcluirActionPerformed(ActionEvent evt){
+        try{
+            ConsultaDAO cDAO = new ConsultaDAO();
+            AgendamentoDAO aDAO = new AgendamentoDAO();
+            
+            int id_agendamento = consultas.get(tblConsultas.getSelectedRow()).getId_agendamento();
+            int id_consulta = consultas.get(tblConsultas.getSelectedRow()).getId_consulta();
+            
+            switch(JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir?")){
+                case 0 -> {
+                    cDAO.deleteConsulta(id_consulta);
+                    aDAO.deleteAgendamento(id_agendamento);
+                    preencherTabela(consultas.get(0).getCartao_sus());
+                }
+            }
+            
+        }catch(HeadlessException e){
+            System.out.println("Error "+e);
+        }
     }
 }
