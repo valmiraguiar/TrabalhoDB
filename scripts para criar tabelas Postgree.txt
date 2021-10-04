@@ -75,8 +75,8 @@ create table Consulta (
 
 create table Agendamento (
 	id_agendamento SERIAL primary key,
-    data_consulta date,
-    data_agendamento date,
+    data_consulta char(10),
+    data_agendamento char(10),
     id_recepcionista int,
     id_paciente int,
     id_consulta int,

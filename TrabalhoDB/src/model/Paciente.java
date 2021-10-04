@@ -9,6 +9,15 @@ public class Paciente {
     private String dataNascimento;
     private String cartaoSus;
     private String sexo;
+    private int id_endereco;
+
+    public int getId_endereco() {
+        return id_endereco;
+    }
+
+    public void setId_endereco(int id_endereco) {
+        this.id_endereco = id_endereco;
+    }
     
     public int getIdPaciente() {
         return idPaciente;

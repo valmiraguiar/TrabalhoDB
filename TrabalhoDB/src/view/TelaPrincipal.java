@@ -22,6 +22,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnConsultas.addActionListener((java.awt.event.ActionEvent evt) -> {
             btnConsultasActionPerformed(evt);
         });
+        
+        btnEditarPaciente.addActionListener((java.awt.event.ActionEvent evt) -> {
+            btnEditarPacienteActionPerformed(evt);
+        });
     }
 
     /**
@@ -36,6 +40,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnCadastrarPaciente = new javax.swing.JButton();
         btnAgendarConsulta = new javax.swing.JButton();
         btnConsultas = new javax.swing.JButton();
+        btnEditarPaciente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -46,6 +51,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         btnConsultas.setText("Consultas");
 
+        btnEditarPaciente.setText("Editar Paciente");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -53,6 +60,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(77, 77, 77)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnEditarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAgendarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCadastrarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -65,9 +73,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnCadastrarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(btnAgendarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(34, 34, 34)
                 .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addComponent(btnEditarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         pack();
@@ -112,6 +122,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnAgendarConsulta;
     private javax.swing.JButton btnCadastrarPaciente;
     private javax.swing.JButton btnConsultas;
+    private javax.swing.JButton btnEditarPaciente;
     // End of variables declaration//GEN-END:variables
 
     private void btnCadastrarPacienteActionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,6 +138,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void btnConsultasActionPerformed(ActionEvent evt) {
         TelaListaConsulta telaListaConsulta = new TelaListaConsulta();
         telaListaConsulta.setVisible(true);
+    }
+    
+    private void btnEditarPacienteActionPerformed(ActionEvent evt) {
+        TelaPaciente telaPaciente = new TelaPaciente();
+        telaPaciente.setVisible(true);
     }
 }
 

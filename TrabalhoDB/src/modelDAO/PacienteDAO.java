@@ -72,12 +72,60 @@ public class PacienteDAO {
         }
     }
     
+    public void updateOrIgnorePaciente(Paciente p){
+        try{
+            Connection con = DBConnection.connection();
+            
+            
+            //insere em pessoa
+            String sqlPessoa = "INSERT INTO pessoa (id_pessoa, cpf, telefone, nome, data_nascimento, sexo, id_endereco) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                                "ON CONFLICT ON CONSTRAINT pessoa_pkey " +
+                                "DO UPDATE SET " +
+                                "cpf = EXCLUDED.cpf, " +
+                                "telefone = EXCLUDED.telefone,  " +
+                                "nome = EXCLUDED.nome,  " +
+                                "data_nascimento = EXCLUDED.data_nascimento, " +
+                                "sexo = EXCLUDED.sexo;";
+            
+            PreparedStatement stmt = con.prepareStatement(sqlPessoa);
+            
+            stmt.setInt(1, p.getIdPaciente());
+            stmt.setString(2, p.getCpf());
+            stmt.setString(3, p.getTelefone());
+            stmt.setString(4, p.getNomePaciente());
+            stmt.setString(5, p.getDataNascimento());
+            stmt.setString(6, p.getSexo());
+            stmt.setInt(7, p.getId_endereco());
+            
+            stmt.executeUpdate();
+            
+            String sqlPaciente = "INSERT INTO paciente (id_paciente, carta_sus) " +
+                                    "VALUES (?, ?) " +
+                                    "ON CONFLICT ON CONSTRAINT paciente_pkey " +
+                                    "DO UPDATE SET " +
+                                    "carta_sus = EXCLUDED.carta_sus;";
+            
+            PreparedStatement stmt2 = con.prepareStatement(sqlPaciente);
+            
+            stmt2.setInt(1, p.getIdPaciente());
+            stmt2.setString(2, p.getCartaoSus());
+            
+            stmt2.executeUpdate();
+                        
+            con.close();
+        }catch(SQLException e){
+            System.out.println("Error "+e);
+        }
+    }
+    
     public Paciente getPaciente(String cartao_sus){
         try{
             Connection con = DBConnection.connection();
         
-            String sql = "SELECT id_pessoa, data_nascimento, sexo, nome FROM pessoa ps JOIN paciente pc ON ps.id_pessoa = pc.id_paciente "
-                        + "WHERE (carta_sus = ?)";
+            String sql = "SELECT * "
+                    + "FROM pessoa ps JOIN paciente pc ON ps.id_pessoa = pc.id_paciente "
+                    + "WHERE (carta_sus = ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             
             stmt.setString(1, cartao_sus);
@@ -90,6 +138,11 @@ public class PacienteDAO {
             p.setDataNascimento(result.getString("data_nascimento"));
             p.setSexo(result.getString("sexo"));
             p.setNomePaciente(result.getString("nome"));
+            p.setId_endereco(result.getInt("id_endereco"));
+            p.setCpf(result.getString("cpf"));
+            p.setCartaoSus(result.getString("carta_sus"));
+            p.setTelefone(result.getString("telefone"));
+            p.setSexo(result.getString("sexo"));
             
             con.close();
             return p;
