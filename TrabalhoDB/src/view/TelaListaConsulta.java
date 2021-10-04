@@ -273,14 +273,15 @@ public class TelaListaConsulta extends javax.swing.JFrame {
             
             Paciente p = pDAO.getPaciente(cartao_sus);
             
-            txtDataNascimento.setText(p.getDataNascimento());
-            txtId.setText(""+p.getIdPaciente());
-            txtNomePaciente.setText(p.getNomePaciente());
-            txtSexo.setText(p.getSexo());
-            
-            consultas.get(0).setCartao_sus(cartao_sus);
-            
-            if(consultas.size() > 0){
+            if(p != null){
+                txtDataNascimento.setText(p.getDataNascimento());
+                txtId.setText(""+p.getIdPaciente());
+                txtNomePaciente.setText(p.getNomePaciente());
+                txtSexo.setText(p.getSexo());       
+                
+                
+                if(consultas.size() > 0){
+                consultas.get(0).setCartao_sus(cartao_sus);
                 consultas.forEach(c -> {
                     tbl.addRow(new String[] {
                         (""+c.getId_consulta()),
@@ -290,11 +291,15 @@ public class TelaListaConsulta extends javax.swing.JFrame {
                         c.getDataAgendamento()
                     });
                 });
-            }else if(consultas == null){
-                JOptionPane.showMessageDialog(null, "Error", "Erro", JOptionPane.ERROR_MESSAGE);
+                }else if(consultas == null){
+                    JOptionPane.showMessageDialog(null, "Error", "Erro", JOptionPane.ERROR_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Nenhuma consulta para esse paciente", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             }else{
-                JOptionPane.showMessageDialog(null, "Nenhuma consulta para esse paciente", "Erro", JOptionPane.ERROR_MESSAGE);
-            }
+                JOptionPane.showMessageDialog(null, "Cartão SUS inexistente!", "Erro", JOptionPane.ERROR_MESSAGE);
+                txtCartaoSus.setText("");
+            }  
         }catch(HeadlessException e){
             System.out.println("Error "+e);
         }        
